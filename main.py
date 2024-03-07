@@ -6,7 +6,7 @@ def main(page: ft.Page):
 
     def on_send_click(e):
         text = txt_input.value
-        response = requests.post("http://localhost:8000/sentiments", json={"text": text})
+        response = requests.post("http://localhost:8080/sentiments", json={"text": text})
         sentiment_response = ""
         if response.status_code == 200:
             sentiment = response.json()["sentiment"]
