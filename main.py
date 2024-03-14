@@ -1,40 +1,34 @@
+from fastapi import FastAPI
+from pydantic import BaseModel
+from typing import List
 
-import flet as ft
-import requests
+app = FastAPI()
 
-def main(page: ft.Page):
-    lbl_output = ft.Text("", size=100, text_align="center", width=3000)
+class Task(BaseModel):
+    title: str
+    completed: bool
 
-    def on_send_click(e):
-        text = txt_input.value
-        response = requests.post("http://0.0.0.0:8080/hello", json={"name": text})
-        if response.status_code == 200:
-            output = response.json()["message"]
-        else:
-            output = "Erro ao processar"
+tasks = []
 
-        lbl_output.value = output
-        lbl_output.update()
+@app.get("/tasks", response_model=List[Task])
+def read_tasks():
+    return tasks
 
-        txt_input.value = ""
-        page.update()
+@app.post("/tasks", response_model=Task)
+def create_task(task: Task):
+    tasks.append(task)
+    return task
 
-    txt_input = ft.TextField(hint_text="Digite seu nome aqui", width=300, autofocus=True)
-    send_button = ft.ElevatedButton(text="Enviar", on_click=on_send_click)
+@app.get("/tasks/{task_id}", response_model=Task)
+def read_task(task_id: int):
+    return tasks[task_id]
 
-    input_container = ft.Row(
-        controls=[txt_input, send_button],
-        alignment="center",
-        expand=True
-    )
+@app.put("/tasks/{task_id}", response_model=Task)
+def update_task(task_id: int, task: Task):
+    tasks[task_id] = task
+    return task
 
-    main_container = ft.Column(
-        controls=[lbl_output, input_container],
-        alignment="center",
-        expand=True
-    )
-
-    page.add(main_container)
-
-ft.app(target=main)
-
+@app.delete("/tasks/{task_id}")
+def delete_task(task_id: int):
+    del tasks[task_id]
+    return {"detail": "Task deleted."}
