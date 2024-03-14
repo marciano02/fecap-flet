@@ -1,4 +1,3 @@
-# frontend.py
 import flet as ft
 from main import create_task, read_tasks, update_task, delete_task
 
