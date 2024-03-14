@@ -1,34 +1,35 @@
+# main.py
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
 
 app = FastAPI()
 
-class Task(BaseModel):
-    title: str
-    completed: bool
+class Tarefa(BaseModel):
+    título: str
+    concluída: bool
 
-tasks = []
+tarefas = []
 
-@app.get("/tasks", response_model=List[Task])
-def read_tasks():
-    return tasks
+@app.get("/tarefas", response_model=List[Tarefa])
+def ler_tarefas():
+    return tarefas
 
-@app.post("/tasks", response_model=Task)
-def create_task(task: Task):
-    tasks.append(task)
-    return task
+@app.post("/tarefas", response_model=Tarefa)
+def criar_tarefa(tarefa: Tarefa):
+    tarefas.append(tarefa)
+    return tarefa
 
-@app.get("/tasks/{task_id}", response_model=Task)
-def read_task(task_id: int):
-    return tasks[task_id]
+@app.get("/tarefas/{tarefa_id}", response_model=Tarefa)
+def ler_tarefa(tarefa_id: int):
+    return tarefas[tarefa_id]
 
-@app.put("/tasks/{task_id}", response_model=Task)
-def update_task(task_id: int, task: Task):
-    tasks[task_id] = task
-    return task
+@app.put("/tarefas/{tarefa_id}", response_model=Tarefa)
+def atualizar_tarefa(tarefa_id: int, tarefa: Tarefa):
+    tarefas[tarefa_id] = tarefa
+    return tarefa
 
-@app.delete("/tasks/{task_id}")
-def delete_task(task_id: int):
-    del tasks[task_id]
-    return {"detail": "Task deleted."}
+@app.delete("/tarefas/{tarefa_id}")
+def deletar_tarefa(tarefa_id: int):
+    del tarefas[tarefa_id]
+    return {"detalhe": "Tarefa excluída."}
