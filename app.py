@@ -50,5 +50,3 @@ def update_task_status():
 
 if __name__ == "__main__":
     ft.app(target=main)
-
-uvicorn main:app --host 0.0.0.0 --port 8000
